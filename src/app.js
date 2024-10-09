@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true })); // parsing incoming urlencoded 
 app.use(express.static('public'));
 
 // Define the port number
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 
 // Start the server
 //app.listen(port, () => {
