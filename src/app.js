@@ -1,19 +1,19 @@
 /**
  * Author: Angelica Gutierrez
- * Date: 113 October 2024
+ * Date: 13 October 2024
  * File Name: app.js
  * Description: In-N-Out Books App
  */
 
 // Setting up an Express application
 const express = require("express");
+const bcrypt = require("bcryptjs");
+const createError = require("http-errors");
+
 const app = express(); // Creates an Express application
 
 
-const createError = require("http-errors");
-
 const books = require("../database/books");
-const bcrypt = require("bcryptjs");
 const users = require("../database/users");
 
 
@@ -22,8 +22,12 @@ app.use(express.urlencoded({ extended: true })); // parsing incoming urlencoded 
 app.use(express.static('public'));
 
 // Define the port number
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
+// Start the server
+//app.listen(port, () => {
+//  console.log(`Server is running on port ${port}`);
+//});
 
 // Export the Express application
 module.exports = app;
@@ -55,52 +59,62 @@ const securityQuestionsSchema = {
 app.get("/", async (req, res, next) => {
   // HTML content for the landing page
   const html = `
-    <html>
-      <head>
-        <title>In-N-Out Books</title>
-        <style>
-          body, h1, h2, h3 {margin: 0; padding: 0; border: 0;}
-          body {
-            background: #424242;
-          color: #zf;
-          margin: 1.25rem;
-          font-size: 1.25rem;
-          }
-          h1, h2, h3 {color: #EF5350; font-family: 'Emblema One', cursive;}
-          h1, h2 {text - align: center }
-          h3 {color: #zf; }
-          .container {width: 50%; margin: 0 auto; font-family: 'Lora', serif; }
-          .book {border: 1px solid #EF5350; padding: 1rem; margin: 1rem 0; }
-          .book h3 {margin - top: 0; }
-          main a {color: #zf; text-decoration: none; }
-          main a:hover {color: #EF5350; text-decoration: underline;}
-        </style>
-      </head>
+  <head>
+    <title>In-N-Out Book</title>
+    <style>
+      body, h1, h2, h3 {margin: 0; padding: 0; border: 0;}
+      body {background: #ffe9e9; color:#000000; margin: 1.25rem; font-size: 1.25rem;}
+      h1, h2, h3 {color: #EF5350; font-family:'Courier New', Courier, monospace, cursive;}
+      h1, h2 {text-align: center }
+      h3 {color:#000000; }
+      .container {width: 50%; margin: 0 auto; font-family: 'Lora', serif; }
+      .book {border: 1px solid #EF5350; padding: 1rem; margin: 1rem 0; }
+      .book h3 {margin-top: 0; }
+      main a {color:#EF5350;; text-decoration: none; }
+      footer {text-align: center; font-size: 0.85em; background-color: #EF5350; color: #000000; padding: 1% 0%;}
+    </style>
+  </head>
 
-      <body>
-        <div class="container">
-          <header>
-            <h1>In-N-Out Books</h1>
-            34
-            <h2>Discover New In-N-Out Books</h2>
-          </header>
-          <br />
-
-          <main>
-            <div class="book">
-              <h3>In-N-Out Book 1</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </div>
-
-            <div class="book">
-              <h3>In-N-Out Book 2</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </div>
-          </main>
-
+  <body>
+    <div class="container">
+      <header>
+        <h1>In-N-Out Books</h1>
+        <h2>- Discover New Books - </h2>
+      </header>
+      <br/>
+      <main>
+        <div class="book">
+          <h3>The Fellowship of the Ring</h3>
+          <p>The Fellowship of the Ring is a rich and immersive epic story which has made significant impact on the fantasy genre. Although it is celebrated for its intricate world-building, complex characters, and timeless themes of bravery and good versus evil, some readers may find its pacing slow and focus on exposition challenging.</p>
         </div>
-      </body>
-    </html>
+
+        <div class="book">
+          <h3>Harry Potter and the Philosopher's Stone</h3>
+          <p>Lily and her husband, James Potter, had been murdered by the dark wizard, Voldemort, but when Voldemort attempted to kill Harry, his power somehow broke. Harry becomes the only living person ever to survive the killing curse, and the only sign of his encounter with Voldemort is a unique lightning bolt-shaped scar on his forehead.</p>
+        </div>
+
+        <div class="book">
+          <h3>The Two Towers</h3>
+          <p>First published in 1954, the novel follows the members of the Fellowship of the Ring as they become separated and face various challenges in their quest to destroy the One Ring. The Two Towers is notable for its exploration of themes such as the corrupting influence of power, the nature of heroism, and the importance of friendship.</p>
+        </div>
+
+        <div class="book">
+          <h3>Harry Potter and the Chamber of Secrets</h3>
+          <p>The Chamber of Secrets follows Harry’s second year at Hogwarts School of Witchcraft and Wizardry, during which a series of mysterious attacks occur. Harry and his friends must uncover the truth behind the attacks and save Hogwarts from a terrible evil. It was adapted into a film in 2002.</p>
+        </div>
+
+        <div class="book">
+          <h3>The Return of the King</h3>
+          <p>The Return of the King is the final installment in J.R.R. Tolkien's iconic fantasy trilogy, concluding the epic tale of courage, sacrifice, and the battle between light and darkness. The story follows Frodo and Sam into the heart of Mordor to face mounting danger on their quest to destroy the One Ring.</p>
+        </div>
+      </main>
+      <footer>
+        <p>&copy; Copyright 2024. All Rights Reserved.</p>
+      </footer>
+
+    </div>
+  </body>
+  </html>
     `; // end HTML content for the landing page
   res.send(html); // Sends the HTML content to the client
 });
@@ -290,3 +304,5 @@ app.use(function (err, req, res, next) {
     stack: req.app.get('env') === 'development' ? err.stack : undefined
   });
 });
+
+
