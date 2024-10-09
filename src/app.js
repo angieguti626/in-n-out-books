@@ -9,6 +9,7 @@
 const express = require("express");
 const app = express(); // Creates an Express application
 
+
 const createError = require("http-errors");
 
 const books = require("../database/books");
@@ -19,6 +20,17 @@ const users = require("../database/users");
 app.use(express.json()); // parse incoming requests as JSON payloads
 app.use(express.urlencoded({ extended: true })); // parsing incoming urlencoded payloads
 app.use(express.static('public'));
+
+// Define the port number
+const port = process.env.PORT || 3000;
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
+// Export the Express application
+module.exports = app;
 
 // Require statement for the ajv npm package
 const Ajv = require("ajv");
@@ -282,14 +294,3 @@ app.use(function (err, req, res, next) {
     stack: req.app.get('env') === 'development' ? err.stack : undefined
   });
 });
-
-// Define the port number
-const port = process.env.PORT || 3000;
-
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
-// Export the Express application
-module.exports = app;
