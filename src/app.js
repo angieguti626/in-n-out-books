@@ -24,10 +24,6 @@ app.use(express.static('public'));
 // Define the port number
 const port = process.env.PORT || 3000;
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
 
 // Export the Express application
 module.exports = app;
